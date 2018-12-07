@@ -82,8 +82,8 @@ class BlogPost:
                 "BlogDescription": self.blogdesciption}
 
     def __str__(self):
-        return "{} {} {} {} {} {} {} {} {}".format(self.title, self.authorfull, self.date, self.description, self.blogsite,
-                                                   self.url, self.tags, self.comments, self.images)
+        return "{} {} {} {} {} {} {} {} {}".format(self.title, self.authorfull, self.date, self.description,
+                                                   self.blogsite, self.url, self.tags, self.comments, self.images)
 
 
 try:
@@ -167,7 +167,7 @@ def get_blogs():
         authorsfull = []
         authorsfirst = []
         authorslast = []
-        authorurls= []
+        authorurls = []
 
         for results in view_content:
             headers = results.find_all(class_="blog-banner")
@@ -227,11 +227,13 @@ def get_blogs():
                         authorurl = footer.find("a")["href"]
                         authorurls.append(authorurl)
         length = len(blogsites)
-        if all(len(lst) == length for lst in [blogsites, urls, titles, descriptions, dates, authorsfull, authorsfirst, authorslast, authorurls]):
+        if all(len(lst) == length for lst in [blogsites, urls, titles, descriptions, dates, authorsfull, authorsfirst,
+                                              authorslast, authorurls]):
             count = 0
             for blogs in blogsites:
-                individual_blog = BlogPost(titles[count], authorsfull[count], authorsfirst[count], authorslast[count], authorurls[count],
-                                           dates[count], descriptions[count], blogsites[count], urls[count])
+                individual_blog = BlogPost(titles[count], authorsfull[count], authorsfirst[count], authorslast[count],
+                                           authorurls[count], dates[count], descriptions[count], blogsites[count],
+                                           urls[count])
                 count += 1
                 class_instances.append(individual_blog)
         else:
@@ -274,7 +276,7 @@ def clean_database():
     statement = "CREATE TABLE 'Blogs' (" \
                 "'Id' INTEGER PRIMARY KEY AUTOINCREMENT," \
                 "'Title' TEXT," \
-                "'AuthorID' INT," \
+                "'AuthorId' INT," \
                 "'AuthorFirstName' TEXT," \
                 "'AuthorLastName' TEXT," \
                 "'Date' TEXT," \
@@ -322,9 +324,11 @@ def enter_data_to_db():
     blogs = get_blogs()
     for blog in blogs:
         json_data = blog.to_json()
-        insertion_json = (json_data["Title"], json_data["AuthorFirst"], json_data["AuthorLast"], json_data["Date"], json_data["Description"],
+        insertion_json = (json_data["Title"], json_data["AuthorFirst"], json_data["AuthorLast"], json_data["Date"],
+                          json_data["Description"],
                           json_data["Comments"], json_data["Images"], json_data["BlogSite"], json_data["CompleteURL"])
-        statement_json = "INSERT INTO 'Blogs' (Title, AuthorFirst, AuthorLast, Date, Description, Comments, Images, BlogSite, " \
+        statement_json = "INSERT INTO 'Blogs' (Title, AuthorFirstName, AuthorLastName, Date, Description, Comments, " \
+                         "Images, BlogSite, " \
                          "CompleteURL)"
         statement_json += " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cur.execute(statement_json, insertion_json)
@@ -339,7 +343,8 @@ def enter_data_to_db():
             statement_json += " VALUES (?, ?)"
             cur.execute(statement_json, insertion_json)
 
-        insertion_json = (json_data["AuthorFull"], json_data["AuthorFirst"], json_data["AuthorLast"], json_data["AuthorURL"])
+        insertion_json = (json_data["AuthorFull"], json_data["AuthorFirst"], json_data["AuthorLast"],
+                          json_data["AuthorURL"])
         statement_json = "INSERT INTO 'Authors' (FullName, FirstName, LastName, URL)"
         statement_json += "VALUES (?, ?, ?, ?)"
         cur.execute(statement_json, insertion_json)
@@ -374,11 +379,13 @@ def update_records():
         cur.execute(statement)
         conn.commit()
 
-    statement = "SELECT Blogs.AuthorFirstName, Blogs.AuthorLastName, Authors.Id FROM Blogs JOIN Authors WHERE Blogs.AuthorFirstName = Authors.FirstName AND Blogs.AuthorLastName = Authors.LastName"
+    statement = "SELECT Blogs.AuthorFirstName, Blogs.AuthorLastName, Authors.Id FROM Blogs JOIN Authors WHERE " \
+                "Blogs.AuthorFirstName = Authors.FirstName AND Blogs.AuthorLastName = Authors.LastName"
     execute = cur.execute(statement)
     results = execute.fetchall()
     for each_result in results:
-        statement = "UPDATE Blogs SET AuthorId = '{}' WHERE Blogs.AuthorFirstName = '{}' AND Blogs.AuthorLastName = '{}'".format(each_result[2], each_result[0], each_result[1])  #stopped here
+        statement = "UPDATE Blogs SET AuthorId = '{}' WHERE Blogs.AuthorFirstName = '{}' AND Blogs.AuthorLastName = " \
+                    "'{}'".format(each_result[2], each_result[0], each_result[1])
         cur.execute(statement)
         conn.commit()
 
@@ -424,12 +431,12 @@ def update_records():
     results = execute.fetchall()
     for each_author in results:
         statement = "UPDATE Blogsites SET NumberBlogs = '{}' WHERE BlogSites.Id = '{}'".format(each_author[1],
-                                                                                           each_author[0])
+                                                                                               each_author[0])
         cur.execute(statement)
         conn.commit()
     return "Update successful"
 
 
-clean_database()
-enter_data_to_db()
-# update_records()
+# clean_database()
+# enter_data_to_db()
+update_records()
