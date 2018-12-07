@@ -1,0 +1,76 @@
+Commands available:
+
+tags
+    Description: A function that compares the number of tags used for x number of articles.
+
+    Options:
+        orderby="" or "Alpha" - Default is ""
+        Description: Specifies whether to order tags alphabetically by typing "Alpha" or order according to the
+        database. Default is by database.
+
+        desc="DESC" or "ASC" - Default is "DESC"
+        Description: Specifies whether you would like your list returned in descending or ascending order. The default
+        is descending.
+
+        limit=None or # - Default is None
+        Description: Specifies the amount of results you want returned. The default is all results in the database.
+
+        graph="y" or "n" - Default is "y"
+        Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
+        open the graph in your browser. The default is "y" for yes.
+
+authors
+    Description: A function that lists authors names, their urls, and the amount of blogs they have posted.
+
+    Options:
+        orderby="Count" or "Alpha" - Default is "Count"
+        Description: Specifies if the information displayed is ordered by the total number of blogs an author has
+        published or lists authors name alphabetically, starting with their first name.
+
+        desc="DESC" or "ASC" - Default is "DESC"
+        Description: Specifies whether the results returned should be in descending or ascending order. The default is
+        descending.
+
+        limit=None or # - Default is None
+        Description: Specifies the amount of results returned. The default is all the results in the database.
+
+        graph="y" or "n" - Default is "y"
+        Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
+        open the graph in your browser. The default is "y" for yes.
+
+comments
+    Description: A function that returns the amount of comments made per month on all of the blogs published.
+
+    Options:
+        limit=None or # - Default is None
+        Description: Specifies the amount of results returned. The default is all the results in the database.
+
+        graph="y" or "n" - Default is "y"
+        Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
+        open the graph in your browser. The default is "y" for yes.
+
+images
+    Description: A function that returns the total number of images used for all posts made by a single blog site.
+
+    Options:
+        graph="y" or "n" - Default is "y"
+        Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
+        open the graph in your browser. The default is "y" for yes.
+
+most_recent
+    Description: A function that returns the most recent blogs to be published on the Library Blog site.
+
+    Options:
+        limit=None or # - Default is None
+        Description: Specifies the amount of results returned. The default is all the results in the database.
+
+blogs_by_author
+    Description: A function that displays all the blog posts made by a single author.
+
+    Options:
+        name=""
+        Description: Specifies the name of the author being queried. The full name of the author must be used in order
+        to prevent similar sounding names from being queried. This option is mandatory.
+
+        limit=None or # - Default is None
+        Description: Specifies the amount of results returned. The default is all the results in the database.
