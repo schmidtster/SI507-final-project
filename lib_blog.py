@@ -437,6 +437,6 @@ def update_records():
     return "Update successful"
 
 
-# clean_database()
-# enter_data_to_db()
+clean_database()
+enter_data_to_db()
 update_records()

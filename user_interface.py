@@ -330,11 +330,11 @@ def most_recent(limit=10):
                                                                                           "Complete URL \n"))
         for each_result in results:
             print("{:<30.25} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(each_result[0],
-                                                                               each_result[1],
-                                                                               each_result[2],
-                                                                               each_result[3],
-                                                                               each_result[4],
-                                                                               each_result[5]))
+                                                                                              each_result[1],
+                                                                                              each_result[2],
+                                                                                              each_result[3],
+                                                                                              each_result[4],
+                                                                                              each_result[5]))
     else:
         statement = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Description, Blogsites.Name, " \
                     "Blogs.CompleteURL " \
@@ -349,11 +349,11 @@ def most_recent(limit=10):
                                                                                           "Complete URL \n"))
         for each_result in results:
             print("{:<30.25} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(each_result[0],
-                                                                               each_result[1],
-                                                                               each_result[2],
-                                                                               each_result[3],
-                                                                               each_result[4],
-                                                                               each_result[5]))
+                                                                                              each_result[1],
+                                                                                              each_result[2],
+                                                                                              each_result[3],
+                                                                                              each_result[4],
+                                                                                              each_result[5]))
     return results
 
 
@@ -398,10 +398,12 @@ def most_recent(limit=10):
 #     return results
 
 
+# USER INTERFACE
+
+
 def load_help_text():
-    with open('helpfp.txt') as f:
+    with open('help.txt') as f:
         return f.read()
-# user interface
 
 
 def user_interface():
