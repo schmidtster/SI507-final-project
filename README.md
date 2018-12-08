@@ -1,17 +1,17 @@
-Data Sources:
+# Data Sources:
 
-    UMICH Library Blog Website: https://www.lib.umich.edu/blogs
+UMICH Library Blog Website: [https://www.lib.umich.edu/blogs][https://www.lib.umich.edu/blogs]
 
-secrets.py: 
+### secrets.py:
     
-    In order to get plotly graphs working, you will need to use a separate file called secrets.py. This file should
-    contain the plotly_key and plotly_username. Sign up for a plot.ly account and visit 
-    https://plot.ly/python/getting-started/ to install plotly modules necessary to run use graphs.
-    Use the requirements.txt to see all modules necessary to run the program.
+In order to get plotly graphs working, you will need to use a separate file called secrets.py. This file should
+contain the plotly_key and plotly_username. Sign up for a plot.ly account and visit 
+https://plot.ly/python/getting-started/ to install plotly modules necessary to run use graphs.
+Use the requirements.txt to see all modules necessary to run the program.
     
-Description:
+### Description:
 
-    My code is structured into two main python programs, described below:
+My code is structured into two main python programs, described below:
     
         lib_blog.py:
             Description: lib_blog.py scrapes the UMICH Library Blog website and gathers information about each blog
@@ -70,7 +70,7 @@ Description:
             class TestUserInterface(unittest.TestCase): Tests data processing procedures and data structures needed for 
             presentation.
 
-User Guide:
+### User Guide:
     
     lib_blog.py
     FILL IN MORE HERE
@@ -146,3 +146,5 @@ User Guide:
     
     exit
         Description: Exit the program.
+
+[https://www.lib.umich.edu/blogs]: https://www.lib.umich.edu/blogs
