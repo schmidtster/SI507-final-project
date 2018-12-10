@@ -202,6 +202,10 @@ Example Input:
     "wipe"
     "wipe refresh"
 
+#### setup
+
+Description: A function that sets up the database at first running.
+
 #### help
     
 Description: A command that will bring up all available commands and their parameters.
