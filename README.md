@@ -10,6 +10,10 @@ In order to get plotly graphs working, you will need to use a separate file call
 contain the plotly_key and plotly_username. Sign up for a plot.ly account and visit 
 https://plot.ly/python/getting-started/ to install plotly modules necessary to run use graphs.
 Use the requirements.txt to see all modules necessary to run the program.
+
+#### SETUP
+
+In order to setup the database, run user_interface.py and use the command "setup" to establish the database.
     
 ## Description:
 
@@ -81,7 +85,7 @@ presentation.
     
 ### lib_blog.py
 
-Simply run the program by using the wipe or wipe refresh commands listed below.
+Simply run the program by using the "setup", "wipe", or "wipe refresh" commands listed below.
 
     
 ### user_interface.py
