@@ -63,3 +63,17 @@ most_recent
     Options:
         limit=None or # - Default is None
         Description: Specifies the amount of results returned. The default is all the results in the database.
+
+wipe
+    Description: A function that wipes the database and rescrapes the UMICH Library Blog site
+
+    Options:
+    refresh - Default is False
+    Description: Specifies if you want to scrape the website for new data or receive cached data. Using refresh will
+    scrape and crawl the UMICH Library Blog website, so it will take around 10 minutes to get the new data.
+
+help
+    Description: A command that will bring up all available commands and their parameters.
+
+exit
+    Description: Exit the program.

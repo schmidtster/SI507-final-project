@@ -1,8 +1,10 @@
 from secrets import plotly_key, plotly_username
+from lib_blog import *
 import sqlite3 as sqlite
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
+import operator
 plotly.tools.set_credentials_file(username=plotly_username, api_key=plotly_key)
 
 
@@ -116,9 +118,10 @@ def tags_bar_graph(tag_count, tag_names):
 def process_authors(orderby="count", desc="desc", limit_authors=None):
     conn = sqlite.connect(db_name)
     cur = conn.cursor()
-    base_statement = "SELECT Authors.FullName, Authors.NumberBlogs FROM Authors"
+    base_statement = "SELECT Authors.FullName, Authors.NumberBlogs, Authors.URL FROM Authors"
     authors = []
     values = []
+    urls = []
 
     if orderby == "alpha":
         statement = " ORDER BY Authors.LastName"
@@ -134,12 +137,14 @@ def process_authors(orderby="count", desc="desc", limit_authors=None):
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
+                    urls.append(result[2])
             else:
                 execute = cur.execute(base_statement)
                 results = execute.fetchall()
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
+                    urls.append(result[2])
         else:
             base_statement += " desc"
             if limit_authors is not None:
@@ -150,12 +155,14 @@ def process_authors(orderby="count", desc="desc", limit_authors=None):
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
+                    urls.append(result[2])
             else:
                 execute = cur.execute(base_statement)
                 results = execute.fetchall()
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
+                    urls.append(result[2])
     else:
         statement = " ORDER BY Authors.NumberBlogs"
         base_statement += statement
@@ -170,12 +177,14 @@ def process_authors(orderby="count", desc="desc", limit_authors=None):
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
+                    urls.append(result[2])
             else:
                 execute = cur.execute(base_statement)
                 results = execute.fetchall()
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
+                    urls.append(result[2])
         else:
             base_statement += " desc"
             if limit_authors is not None:
@@ -186,22 +195,24 @@ def process_authors(orderby="count", desc="desc", limit_authors=None):
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
+                    urls.append(result[2])
             else:
                 execute = cur.execute(base_statement)
                 results = execute.fetchall()
                 for result in results:
                     authors.append(result[0])
                     values.append(result[1])
-    print("{:<30.25} | {:<5} \n".format("Author", "Count"))
+                    urls.append(result[2])
+    print("{:<30.25} | {:<3} | {:<50.50} \n".format("Author", "Count", "URL"))
     for result in results:
-        print("{:<30.25} | {:<5}".format(result[0], result[1]))
+        print("{:<30.25} | {:<3} | {:<50.50}".format(result[0], result[1], result[2]))
     conn.close()
-    return authors, values
+    return authors, values, urls
 
 
 def authors_pie_chart(authors, values):
     trace = go.Pie(labels=authors, values=values)
-    py.plot([trace], filename="authors_pie_chart", auto_open=True)
+    py.plot([trace], filename="Blogs Per Author", auto_open=True)
     return "Opening a new tab in your web browser..."
 
 
@@ -264,11 +275,11 @@ def comments_line_graph(dates, comments):
     )
     data = [trace0]
 
-    py.plot(data, filename='line-mode', auto_open=True)
+    py.plot(data, filename='Comments Per Month', auto_open=True)
     return "Opening a new tab in your web browser..."
 
 
-def images_processor():
+def process_images():
     conn = sqlite.connect(db_name)
     cur = conn.cursor()
     blogsites = []
@@ -286,17 +297,18 @@ def images_processor():
             returnblogsites[result[0]] += result[1]
         img_counts.append(result[1])
 
+    sorted_blogs = sorted(returnblogsites.items(), reverse=True, key=operator.itemgetter(1))
     print("{:<30.25} | {:<5} \n".format("Blog Site Name", "Count of Images for all Blogs"))
-    for result in returnblogsites.items():
+    for result in sorted_blogs:
         print("{:<30.25} | {:<5}".format(result[0], result[1]))
     conn.close()
-    return blogsites, img_counts
+    return sorted_blogs, blogsites, img_counts
 
 
 def images_histogram(blogsites, img_counts):
     data = [
         go.Histogram(
-            histfunc="count",
+            histfunc="sum",
             y=img_counts,
             x=blogsites,
             name="Total Images per Blog Site"
@@ -309,7 +321,7 @@ def images_histogram(blogsites, img_counts):
         )
     ]
 
-    py.plot(data, filename='binning function', auto_open=True)
+    py.plot(data, filename='Images Per Blogsite and Sum', auto_open=True)
     return "Opening a new tab in your web browser..."
 
 
@@ -363,7 +375,7 @@ def most_recent(limit=10):
 #     if limit is not None:
 #         statement = "SELECT Blogs.Title, Blogs.Date, Blogs.Description, Blogsites.Name, Blogs.CompleteURL FROM Blogs
 #         JOIN Blogsites ON Blogs.Blogsite = Blogsites.Id JOIN Authors on Blogs.AuthorId = Authors.Id WHERE
-#         Authors.FullName = '{}' LIMIT = {}".format(
+#         Authors.FullName LIKE '{}' LIMIT = {}".format(
 #             name, limit)
 #         execute = cur.execute(statement)
 #         results = execute.fetchall()
@@ -381,7 +393,7 @@ def most_recent(limit=10):
 #     else:
 #         statement = "SELECT Blogs.Title, Blogs.Date, Blogs.Description, Blogsites.Name, Blogs.CompleteURL FROM
 #         Blogs JOIN Blogsites ON Blogs.Blogsite = Blogsites.Id JOIN Authors on Blogs.AuthorId = Authors.Id WHERE
-#         Authors.FullName = '{}'".format(name)
+#         Authors.FullName LIKE '{}'".format(name)
 #         execute = cur.execute(statement)
 #         results = execute.fetchall()
 #         print("{:<30.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Title", "Date Published",
@@ -402,7 +414,7 @@ def most_recent(limit=10):
 
 
 def load_help_text():
-    with open('help.txt') as f:
+    with open('helpfp.txt') as f:
         return f.read()
 
 
@@ -497,9 +509,9 @@ def user_interface():
                     else:
                         print("Command not recognized: ", response)
                         user_interface()
-            command_processed = images_processor()
+            command_processed = process_images()
             if command_list[0] != "":
-                make_graph = images_histogram(command_processed[0], command_processed[1])
+                make_graph = images_histogram(command_processed[1], command_processed[2])
                 print(make_graph)
 
         elif most_recent_commands[0] in response_list:
@@ -511,8 +523,8 @@ def user_interface():
                             try:
                                 convert_str = int(params[1])
                                 most_recent(convert_str)
-                            except Exception as e:
-                                print("A valid integer is needed. Please type a valid integer after 'limit='", e)
+                            except Exception as error:
+                                print("A valid integer is needed. Please type a valid integer after 'limit='", error)
                                 user_interface()
                     elif most_recent_commands[0] == each_parameter:
                         pass
@@ -551,7 +563,25 @@ def user_interface():
         #     print(command_list)
         #     command_processed = blogs_by_author(command_list[0], command_list[1])
 
-        elif response == 'help':
+        elif "wipe" in response_list:
+            if "refresh" in response_list:
+                global MAX_STALENESS
+                clean = clean_database()
+                print(clean)
+                data_entry = enter_data_to_db(staleness=0)
+                print(data_entry)
+                update_comp = update_records()
+                print(update_comp)
+            else:
+                clean = clean_database()
+                print(clean)
+                data_entry = enter_data_to_db()
+                print(data_entry)
+                update_comp = update_records()
+                print(update_comp)
+            continue
+
+        elif response == "help":
             print(help_text)
             continue
 
@@ -564,16 +594,5 @@ def user_interface():
             user_interface()
 
 
-# data = process_tags(desc="asc", limit=10)
-# tags_bar_graph(data[0], data[1])
-#
-# auth_data = process_authors("asc", limit_authors=10)
-# authors_pie_chart(auth_data[0], auth_data[1])
-#
-# results = process_comments()
-# comments_line_graph(results[0], results[1])
-#
-# results = images_processor()
-# images_histogram(results[0], results[1])
-
-user_interface()
+if __name__ == "__main__":
+    user_interface()
