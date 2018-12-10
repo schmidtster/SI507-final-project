@@ -104,6 +104,9 @@ Description: A function that compares the number of tags used for x number of ar
         Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
         open the graph in your browser. The default is "y" for yes.
         
+        *The program will prompt you if you would like to view all the articles for a certain tag. You can type in the
+        index of the tag you would like articles for or type "no" to exit.
+        
 Example inputs: 
         
     "tags alpha asc limit=5"
@@ -128,6 +131,9 @@ Description: A function that lists authors names, their urls, and the amount of 
         graph - Default is graph
         Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
         open the graph in your browser. The default is "y" for yes.
+        
+        *The program will prompt you if you would like to view all the articles for a certain author. You can type in
+        the index of the author you would like articles for or type "no" to exit.
 Example inputs:
 
     "authors alpha asc limit=10 graph"
@@ -144,6 +150,9 @@ Description: A function that returns the amount of comments made per month on al
         graph - Default is graph
         Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
         open the graph in your browser. The default is "y" for yes.
+        
+        *The program will prompt you if you would like to view all the articles for a certain month. You can type in the
+        index of the month you would like articles for or type "no" to exit.
 Example inputs:
 
     "comments limit=10"

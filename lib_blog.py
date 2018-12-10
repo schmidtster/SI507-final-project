@@ -95,7 +95,7 @@ except Exception as e:
     BLOG_CACHE = {}
     print(e)
 
-MAX_STALENESS = 100000
+MAX_STALENESS = 2000000
 
 
 def is_fresh(cache_entry):

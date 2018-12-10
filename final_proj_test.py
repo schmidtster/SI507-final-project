@@ -234,4 +234,5 @@ class TestUserInterface(unittest.TestCase):
         self.assertIn("New Exhibit | Universal Declaration of Human Rights", list_of_recent_titles)
 
 
-# unittest.main()
+if __name__ == '__main__':
+    unittest.main()

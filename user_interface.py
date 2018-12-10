@@ -14,7 +14,7 @@ db_name = "blogs.db"
 def process_tags(orderby="count", desc="desc", limit=None):
     conn = sqlite.connect(db_name)
     cur = conn.cursor()
-    base_statement = "SELECT Tags.TagName, Tags.NumberUsed FROM Tags"
+    base_statement = "SELECT Tags.TagName, Tags.NumberUsed, Tags.Id FROM Tags"
     tag_names = []
     tag_count = []
 
@@ -90,11 +90,19 @@ def process_tags(orderby="count", desc="desc", limit=None):
                 for result in results:
                     tag_names.append(result[0])
                     tag_count.append(result[1])
-    print("{:<30.25} | {:<5} \n".format("Tags", "Count"))
+    tags_index = {}
+    count = 1
+    print("{:<5} | {:<30.25} | {:<5} \n".format("Index", "Tags", "Count"))
     for result in results:
-        print("{:<30.25} | {:<5}".format(result[0], result[1]))
+        output = "{:<5} | {:<30.25} | {:<5}".format(count, result[0], result[1])
+        print(output)
+        sql = "SELECT Blogs.Title, Blogs.CompleteURL FROM Blogs JOIN TagAssociations ON Blogs.Id = TagAssociations.BlogTitle WHERE TagAssociations.TagName = {}".format(result[2])
+        result = cur.execute(sql)
+        result_list = result.fetchall()
+        tags_index[count] = result_list
+        count += 1
     conn.close()
-    return tag_count, tag_names
+    return tag_count, tag_names, tags_index
 
 
 def tags_bar_graph(tag_count, tag_names):
@@ -118,7 +126,7 @@ def tags_bar_graph(tag_count, tag_names):
 def process_authors(orderby="count", desc="desc", limit_authors=None):
     conn = sqlite.connect(db_name)
     cur = conn.cursor()
-    base_statement = "SELECT Authors.FullName, Authors.NumberBlogs, Authors.URL FROM Authors"
+    base_statement = "SELECT Authors.FullName, Authors.NumberBlogs, Authors.URL, Authors.Id FROM Authors"
     authors = []
     values = []
     urls = []
@@ -203,11 +211,19 @@ def process_authors(orderby="count", desc="desc", limit_authors=None):
                     authors.append(result[0])
                     values.append(result[1])
                     urls.append(result[2])
-    print("{:<30.25} | {:<3} | {:<50.50} \n".format("Author", "Count", "URL"))
+    authors_index = {}
+    count = 1
+    print("{:<5} | {:<30.25} | {:<3} | {:<50} \n".format("Index", "Author", "Count", "URL"))
     for result in results:
-        print("{:<30.25} | {:<3} | {:<50.50}".format(result[0], result[1], result[2]))
+        output = "{:<5} | {:<30.25} | {:<3} | {:<50}".format(count, result[0], result[1], result[2])
+        print(output)
+        sql = "SELECT Authors.FullName, Blogs.Title, Blogs.Description, Blogs.Date, Blogs.CompleteURL FROM Blogs JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.AuthorId = {}".format(result[3])
+        result = cur.execute(sql)
+        result_list = result.fetchall()
+        authors_index[count] = result_list
+        count += 1
     conn.close()
-    return authors, values, urls
+    return authors, values, urls, authors_index
 
 
 def authors_pie_chart(authors, values):
@@ -240,11 +256,20 @@ def process_comments(limit=None):
                 del dates[-1]
                 del total_comments_per_month[-1]
                 break
-        print("{:<30.25} | {:<5} \n".format("Month, Year", "Total Comments"))
+        dates_index = {}
+        count = 1
+        print("{:<5} | {:<17.17} | {:<5} \n".format("Index", "Month, Year", "Total Comments"))
         for row in range(len(dates)):
-            print("{:<30.25} | {:<5}".format(dates[row], total_comments_per_month[row]))
+            output = "{:<5} | {:<17.17} | {:<5}".format(count, dates[row], total_comments_per_month[row])
+            print(output)
+            month_year_split = dates[row].split()
+            sql = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Comments, Blogs.CompleteURL FROM Blogs JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.Date LIKE '%{}% %{}%'".format(month_year_split[0], month_year_split[1])
+            result = cur.execute(sql)
+            result_list = result.fetchall()
+            dates_index[count] = result_list
+            count += 1
         conn.close()
-        return dates, total_comments_per_month
+        return dates, total_comments_per_month, dates_index
     else:
         statement = "SELECT Blogs.Date, Blogs.Comments FROM Blogs ORDER BY Blogs.Id desc"
         execute = cur.execute(statement)
@@ -259,11 +284,20 @@ def process_comments(limit=None):
                 running_total = int(result[1])
             else:
                 running_total += int(result[1])
-        print("{:<30.25} | {:<5} \n".format("Month, Year", "Total Comments"))
+        dates_index = {}
+        count = 1
+        print("{:<5} | {:<17.17} | {:<5} \n".format("Index", "Month, Year", "Total Comments"))
         for row in range(len(dates)):
-            print("{:<30.25} | {:<5}".format(dates[row], total_comments_per_month[row]))
+            output = "{:<5} | {:<17.17} | {:<5}".format(count, dates[row], total_comments_per_month[row])
+            print(output)
+            month_year_split = dates[row].split()
+            sql = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Comments, Blogs.CompleteURL FROM Blogs JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.Date LIKE '%{}% %{}%'".format(month_year_split[0], month_year_split[1])
+            result = cur.execute(sql)
+            result_list = result.fetchall()
+            dates_index[count] = result_list
+            count += 1
         conn.close()
-        return dates, total_comments_per_month
+        return dates, total_comments_per_month, dates_index
 
 
 def comments_line_graph(dates, comments):
@@ -328,6 +362,7 @@ def images_histogram(blogsites, img_counts):
 def most_recent(limit=10):
     conn = sqlite.connect(db_name)
     cur = conn.cursor()
+    count = 1
     if limit is not 10:
         statement = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Description, Blogsites.Name, " \
                     "Blogs.CompleteURL " \
@@ -335,18 +370,22 @@ def most_recent(limit=10):
                     "BlogSites.Id LIMIT {}".format(limit)
         execute = cur.execute(statement)
         results = execute.fetchall()
-        print("{:<30.25} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Title", "Author",
-                                                                                          "Date Published",
-                                                                                          "Description",
-                                                                                          "Blog Site",
-                                                                                          "Complete URL \n"))
+        print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Index",
+                                                                                                  "Title",
+                                                                                                  "Author",
+                                                                                                  "Date Published",
+                                                                                                  "Description",
+                                                                                                  "Blog Site",
+                                                                                                  "Complete URL \n"))
         for each_result in results:
-            print("{:<30.25} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(each_result[0],
+            print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(count,
+                                                                                                      each_result[0],
                                                                                               each_result[1],
                                                                                               each_result[2],
                                                                                               each_result[3],
                                                                                               each_result[4],
                                                                                               each_result[5]))
+            count += 1
     else:
         statement = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Description, Blogsites.Name, " \
                     "Blogs.CompleteURL " \
@@ -354,65 +393,23 @@ def most_recent(limit=10):
                     "BlogSites.Id LIMIT 10"
         execute = cur.execute(statement)
         results = execute.fetchall()
-        print("{:<30.25} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Title", "Author",
+        print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Index", "Title", "Author",
                                                                                           "Date Published",
                                                                                           "Description",
                                                                                           "Blog Site",
                                                                                           "Complete URL \n"))
         for each_result in results:
-            print("{:<30.25} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(each_result[0],
+            print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(count, each_result[0],
                                                                                               each_result[1],
                                                                                               each_result[2],
                                                                                               each_result[3],
                                                                                               each_result[4],
                                                                                               each_result[5]))
+            count += 1
     return results
 
 
-# def blogs_by_author(name="", limit=None):
-#     conn = sqlite.connect(db_name)
-#     cur = conn.cursor()
-#     if limit is not None:
-#         statement = "SELECT Blogs.Title, Blogs.Date, Blogs.Description, Blogsites.Name, Blogs.CompleteURL FROM Blogs
-#         JOIN Blogsites ON Blogs.Blogsite = Blogsites.Id JOIN Authors on Blogs.AuthorId = Authors.Id WHERE
-#         Authors.FullName LIKE '{}' LIMIT = {}".format(
-#             name, limit)
-#         execute = cur.execute(statement)
-#         results = execute.fetchall()
-#         print("{:<30.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Title", "Date Published",
-#         "Description", "Blog Site Name", "CompleteURL \n"))
-#         if results[0] != ():
-#             for each_result in results:
-#                 print("{:<30.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(each_result[0],
-#                                                                                    each_result[1],
-#                                                                                    each_result[2],
-#                                                                                    each_result[3],
-#                                                                                    each_result[4]))
-#         else:
-#             print("No authors found by that name.")
-#     else:
-#         statement = "SELECT Blogs.Title, Blogs.Date, Blogs.Description, Blogsites.Name, Blogs.CompleteURL FROM
-#         Blogs JOIN Blogsites ON Blogs.Blogsite = Blogsites.Id JOIN Authors on Blogs.AuthorId = Authors.Id WHERE
-#         Authors.FullName LIKE '{}'".format(name)
-#         execute = cur.execute(statement)
-#         results = execute.fetchall()
-#         print("{:<30.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Title", "Date Published",
-#         "Description", "Blog Site Name", "CompleteURL \n"))
-#         if results[0] != ():
-#             for each_result in results:
-#                 print("{:<30.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(each_result[0],
-#                                                                                    each_result[1],
-#                                                                                    each_result[2],
-#                                                                                    each_result[3],
-#                                                                                    each_result[4]))
-#         else:
-#             print("No authors found by that name.")
-#     return results
-
-
 # USER INTERFACE
-
-
 def load_help_text():
     with open('helpfp.txt') as f:
         return f.read()
@@ -425,7 +422,6 @@ def user_interface():
     comments_commands = ["comments", "limit", "graph"]
     images_commands = ["images", "graph"]
     most_recent_commands = ["most_recent", "limit"]
-    # by_author_commands = ["blogs_by_author", "name", "limit"]
     response = ""
     while response != "exit":
         response = input('Enter a command: ')
@@ -453,6 +449,28 @@ def user_interface():
                 make_graph = tags_bar_graph(command_processed[0], command_processed[1])
                 print(make_graph)
 
+            tags_input = ""
+            while tags_input != "no":
+                tags_input = input(
+                    "Would you like to view the articles associated with a tag? Type the number or type 'no' to return "
+                    "to main display: ")
+                if tags_input == "no":
+                    break
+                else:
+                    try:
+                        int(tags_input)
+                        print("{:<5} | {:<40.35} | {:<20}".format("Index", "Blog Title", "Blog URL"))
+                        if int(tags_input) in command_processed[2].keys():
+                            count = 1
+                            for each_value in command_processed[2][int(tags_input)]:
+                                output = "{:<5} | {:<40.38} | {:<20}".format(count, each_value[0], each_value[1])
+                                count += 1
+                                print(output)
+                        else:
+                            print("Index not found, please try again.")
+                    except Exception as error6:
+                        print("Please type in a number.", error6)
+
         elif authors_commands[0] in response_list:
             command_list = ["count", "desc", None, ""]
             for each_parameter in response_list:
@@ -476,6 +494,36 @@ def user_interface():
                 make_graph = authors_pie_chart(command_processed[0], command_processed[1])
                 print(make_graph)
 
+            authors_input = ""
+            while authors_input != "no":
+                authors_input = input(
+                    "Would you like to view the articles associated with an author? Type the number or type 'no' to "
+                    "return to main display: ")
+                if authors_input == "no":
+                    break
+                else:
+                    print("{:<5} | {:<30.30} | {:<40.40} | {:<20.20} | {:<50}".format("Index",
+                                                                                         "Title",
+                                                                                         "Description",
+                                                                                         "Date",
+                                                                                         "Blog URL"))
+                    try:
+                        int(authors_input)
+                        if int(authors_input) in command_processed[3].keys():
+                            count = 1
+                            for each_value in command_processed[3][int(authors_input)]:
+                                output = "{:<5} | {:<30.30} | {:<40.40} | {:<20.20} | {:<50}".format(count,
+                                                                                                        each_value[1],
+                                                                                                        each_value[2],
+                                                                                                        each_value[3],
+                                                                                                        each_value[4])
+                                count += 1
+                                print(output)
+                        else:
+                            print("Index not found, please try again.")
+                    except Exception as error7:
+                        print("Please type in a number.", error7)
+
         elif comments_commands[0] in response_list:
             command_list = ["", ""]
             for each_parameter in response_list:
@@ -497,6 +545,37 @@ def user_interface():
             if command_list[1] != "":
                 make_graph = comments_line_graph(command_processed[0], command_processed[1])
                 print(make_graph)
+
+            comments_input = ""
+            while comments_input != "no":
+                comments_input = input(
+                    "Would you like to view the articles associated with an author? Type the number or type 'no' to "
+                    "return to main display: ")
+                if comments_input == "no":
+                    break
+                else:
+                    print("{:<5} | {:<40.38} | {:<25.25} | {:<17.17} | {:<8} | {:<50}".format("Index",
+                                                                                              "Title",
+                                                                                              "Author",
+                                                                                              "Date",
+                                                                                              "Comments",
+                                                                                              "Blog URL"))
+                    try:
+                        int(comments_input)
+                        if int(comments_input) in command_processed[2].keys():
+                            count = 1
+                            for each_value in command_processed[2][int(comments_input)]:
+                                output = "{:<5} | {:<40.38} | {:<25.25} | {:<17.17} | {:<8} | {:<50}".format(count,
+                                                                                                        each_value[0],
+                                                                                                        each_value[1],
+                                                                                                        each_value[2],
+                                                                                                        each_value[3], each_value[4])
+                                count += 1
+                                print(output)
+                        else:
+                            print("Index not found, please try again.")
+                    except Exception as error7:
+                        print("Please type in a number.", error7)
 
         elif images_commands[0] in response_list:
             command_list = [""]
@@ -537,33 +616,8 @@ def user_interface():
                 print("Command not recognized: ", response)
                 user_interface()
 
-        # elif by_author_commands[0] in response_list:
-        #     command_list = ["", ""]
-        #     if len(response_list) >= 2:
-        #         for each_parameter in response_list:
-        #             if "=" in each_parameter:
-        #                 params = each_parameter.split("=")
-        #                 if by_author_commands[1] in params:
-        #                     command_list[0] = each_parameter
-        #                 elif by_author_commands[2] in params:
-        #                     try:
-        #                         convert_str = int(params[1])
-        #                         command_list[1] = each_parameter
-        #                     except Exception as e:
-        #                         print("A valid integer is needed. Please type a valid integer after 'limit='", e)
-        #                         user_interface()
-        #             elif by_author_commands[0] in each_parameter:
-        #                 pass
-        #             else:
-        #                 print("Command not recognized: ", response)
-        #                 user_interface()
-        #     else:
-        #         print("Command not recognized: ", response)
-        #         user_interface()
-        #     print(command_list)
-        #     command_processed = blogs_by_author(command_list[0], command_list[1])
-
         elif "wipe" in response_list:
+            print(response_list)
             if "refresh" in response_list:
                 clean = clean_database()
                 print(clean)
@@ -593,5 +647,4 @@ def user_interface():
             user_interface()
 
 
-if __name__ == "__main__":
-    user_interface()
+user_interface()

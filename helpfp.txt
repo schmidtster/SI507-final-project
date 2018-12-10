@@ -15,9 +15,12 @@ tags
         limit=None or # - Default is None
         Description: Specifies the amount of results you want returned. The default is all results in the database.
 
-        graph - Default is graph
+        graph - Default is no graph
         Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
-        open the graph in your browser. The default is "y" for yes.
+        open the graph in your browser.
+
+        *The program will prompt you if you would like to view all the articles for a certain tag. You can type in the
+        index of the tag you would like articles for or type "no" to exit.
 
 authors
     Description: A function that lists authors names, their urls, and the amount of blogs they have posted.
@@ -34,9 +37,12 @@ authors
         limit=None or # - Default is None
         Description: Specifies the amount of results returned. The default is all the results in the database.
 
-        graph - Default is graph
+        graph - Default is no graph
         Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
-        open the graph in your browser. The default is "y" for yes.
+        open the graph in your browser.
+
+        *The program will prompt you if you would like to view all the articles for a certain author. You can type in
+        the index of the author you would like articles for or type "no" to exit.
 
 comments
     Description: A function that returns the amount of comments made per month on all of the blogs published.
@@ -45,15 +51,18 @@ comments
         limit=None or # - Default is None
         Description: Specifies the amount of results returned. The default is all the results in the database.
 
-        graph - Default is graph
+        graph - Default is no graph
         Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
         open the graph in your browser. The default is "y" for yes.
+
+        *The program will prompt you if you would like to view all the articles for a certain month. You can type in the
+        index of the month you would like articles for or type "no" to exit.
 
 images
     Description: A function that returns the total number of images used for all posts made by a single blog site.
 
     Options:
-        graph - Default is graph
+        graph - Default is no graph
         Description: Specifies if you would like a graph of the data displayed in your default web browser. It will auto
         open the graph in your browser. The default is "y" for yes.
 
