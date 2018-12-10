@@ -96,7 +96,8 @@ def process_tags(orderby="count", desc="desc", limit=None):
     for result in results:
         output = "{:<5} | {:<30.25} | {:<5}".format(count, result[0], result[1])
         print(output)
-        sql = "SELECT Blogs.Title, Blogs.CompleteURL FROM Blogs JOIN TagAssociations ON Blogs.Id = TagAssociations.BlogTitle WHERE TagAssociations.TagName = {}".format(result[2])
+        sql = "SELECT Blogs.Title, Blogs.CompleteURL FROM Blogs JOIN TagAssociations ON Blogs.Id = " \
+              "TagAssociations.BlogTitle WHERE TagAssociations.TagName = {}".format(result[2])
         result = cur.execute(sql)
         result_list = result.fetchall()
         tags_index[count] = result_list
@@ -217,7 +218,8 @@ def process_authors(orderby="count", desc="desc", limit_authors=None):
     for result in results:
         output = "{:<5} | {:<30.25} | {:<3} | {:<50}".format(count, result[0], result[1], result[2])
         print(output)
-        sql = "SELECT Authors.FullName, Blogs.Title, Blogs.Description, Blogs.Date, Blogs.CompleteURL FROM Blogs JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.AuthorId = {}".format(result[3])
+        sql = "SELECT Authors.FullName, Blogs.Title, Blogs.Description, Blogs.Date, Blogs.CompleteURL FROM Blogs " \
+              "JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.AuthorId = {}".format(result[3])
         result = cur.execute(sql)
         result_list = result.fetchall()
         authors_index[count] = result_list
@@ -263,7 +265,9 @@ def process_comments(limit=None):
             output = "{:<5} | {:<17.17} | {:<5}".format(count, dates[row], total_comments_per_month[row])
             print(output)
             month_year_split = dates[row].split()
-            sql = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Comments, Blogs.CompleteURL FROM Blogs JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.Date LIKE '%{}% %{}%'".format(month_year_split[0], month_year_split[1])
+            sql = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Comments, Blogs.CompleteURL FROM Blogs " \
+                  "JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.Date " \
+                  "LIKE '%{}% %{}%'".format(month_year_split[0], month_year_split[1])
             result = cur.execute(sql)
             result_list = result.fetchall()
             dates_index[count] = result_list
@@ -291,7 +295,9 @@ def process_comments(limit=None):
             output = "{:<5} | {:<17.17} | {:<5}".format(count, dates[row], total_comments_per_month[row])
             print(output)
             month_year_split = dates[row].split()
-            sql = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Comments, Blogs.CompleteURL FROM Blogs JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.Date LIKE '%{}% %{}%'".format(month_year_split[0], month_year_split[1])
+            sql = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Comments, Blogs.CompleteURL FROM Blogs " \
+                  "JOIN Authors ON Blogs.AuthorId = Authors.Id WHERE Blogs.Date LIKE" \
+                  " '%{}% %{}%'".format(month_year_split[0], month_year_split[1])
             result = cur.execute(sql)
             result_list = result.fetchall()
             dates_index[count] = result_list
@@ -380,11 +386,11 @@ def most_recent(limit=10):
         for each_result in results:
             print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(count,
                                                                                                       each_result[0],
-                                                                                              each_result[1],
-                                                                                              each_result[2],
-                                                                                              each_result[3],
-                                                                                              each_result[4],
-                                                                                              each_result[5]))
+                                                                                                      each_result[1],
+                                                                                                      each_result[2],
+                                                                                                      each_result[3],
+                                                                                                      each_result[4],
+                                                                                                      each_result[5]))
             count += 1
     else:
         statement = "SELECT Blogs.Title, Authors.FullName, Blogs.Date, Blogs.Description, Blogsites.Name, " \
@@ -393,18 +399,20 @@ def most_recent(limit=10):
                     "BlogSites.Id LIMIT 10"
         execute = cur.execute(statement)
         results = execute.fetchall()
-        print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Index", "Title", "Author",
-                                                                                          "Date Published",
-                                                                                          "Description",
-                                                                                          "Blog Site",
-                                                                                          "Complete URL \n"))
+        print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format("Index", "Title",
+                                                                                                  "Author",
+                                                                                                  "Date Published",
+                                                                                                  "Description",
+                                                                                                  "Blog Site",
+                                                                                                  "Complete URL \n"))
         for each_result in results:
-            print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(count, each_result[0],
-                                                                                              each_result[1],
-                                                                                              each_result[2],
-                                                                                              each_result[3],
-                                                                                              each_result[4],
-                                                                                              each_result[5]))
+            print("{:<5} | {:<30.28} | {:<25.25} | {:<20.20} | {:<40.35} | {:<25.25} | {:<40}".format(count,
+                                                                                                      each_result[0],
+                                                                                                      each_result[1],
+                                                                                                      each_result[2],
+                                                                                                      each_result[3],
+                                                                                                      each_result[4],
+                                                                                                      each_result[5]))
             count += 1
     return results
 
@@ -503,20 +511,20 @@ def user_interface():
                     break
                 else:
                     print("{:<5} | {:<30.30} | {:<40.40} | {:<20.20} | {:<50}".format("Index",
-                                                                                         "Title",
-                                                                                         "Description",
-                                                                                         "Date",
-                                                                                         "Blog URL"))
+                                                                                      "Title",
+                                                                                      "Description",
+                                                                                      "Date",
+                                                                                      "Blog URL"))
                     try:
                         int(authors_input)
                         if int(authors_input) in command_processed[3].keys():
                             count = 1
                             for each_value in command_processed[3][int(authors_input)]:
                                 output = "{:<5} | {:<30.30} | {:<40.40} | {:<20.20} | {:<50}".format(count,
-                                                                                                        each_value[1],
-                                                                                                        each_value[2],
-                                                                                                        each_value[3],
-                                                                                                        each_value[4])
+                                                                                                     each_value[1],
+                                                                                                     each_value[2],
+                                                                                                     each_value[3],
+                                                                                                     each_value[4])
                                 count += 1
                                 print(output)
                         else:
@@ -566,10 +574,11 @@ def user_interface():
                             count = 1
                             for each_value in command_processed[2][int(comments_input)]:
                                 output = "{:<5} | {:<40.38} | {:<25.25} | {:<17.17} | {:<8} | {:<50}".format(count,
-                                                                                                        each_value[0],
-                                                                                                        each_value[1],
-                                                                                                        each_value[2],
-                                                                                                        each_value[3], each_value[4])
+                                                                                                             each_value[0],
+                                                                                                             each_value[1],
+                                                                                                             each_value[2],
+                                                                                                             each_value[3],
+                                                                                                             each_value[4])
                                 count += 1
                                 print(output)
                         else:

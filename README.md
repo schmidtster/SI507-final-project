@@ -1,3 +1,5 @@
+# UMICH Library Blog Data Display Program
+
 ## Data Sources:
 
 UMICH Library Blog Website: [https://www.lib.umich.edu/blogs][https://www.lib.umich.edu/blogs]
@@ -13,11 +15,11 @@ Use the requirements.txt to see all modules necessary to run the program.
 
 My code is structured into two main python programs and one unittest program.
     
-#### lib_blog.py:
+### lib_blog.py:
 
 Description: lib_blog.py scrapes the UMICH Library Blog website and gathers information about each blog posted.
             
-##### PROCESSING FUNCTIONS:
+#### PROCESSING FUNCTIONS:
 
 _get_blogs()_: This function scrapes the 99 pages of blogs on the UMICH library website. From those pages, it
 gathers Title, BlogURL, Author, AuthorURL, Date, Description, BlogSite, BlogSiteURL. It then passes this
@@ -33,18 +35,18 @@ _update_records()_: This function: deletes duplicate tags, authors, and blogsite
 tables; establishes relations for tags, blogsites, authors; fills in data for TagAssociations; and fills in
 data for number of times tags were used and number of blogs authors published.
 
-##### CLASSES:
+#### CLASSES:
 
 __BlogPost__: Inputs are information gathered from scraping UMICH blog pages. It crawls into each individual blog
 page and extracts more information. Class functions include: to_json(): which outputs a json dictionary and
 __str__(): which displays basic information about each blog.
 
-#### user_interface.py:
+### user_interface.py:
 
 Description: Processes queries for the database and displays information both in the terminal and through
 plotly.
 
-##### PROCESSING FUCNTIONS:
+#### PROCESSING FUCNTIONS:
 
 _user_interface()_: This function takes commands entered into the command line and filters them to run
 the functions outlined. Filters commands and parameters with a series of lists.
@@ -61,12 +63,12 @@ per month from the database and display it using a plotly line graph.
 **images functions**: _process_images()_ and _images_histogram()_ - Retrive information about the number of images
 used per blog site (total) and display the total and averages as a plotly histogram.
 
-#### final_proj_test.py:
+### final_proj_test.py:
 
 Description: A series of unittests that determine if scraping, ingest of data, and user_interface are
 properly configured.
 
-##### CLASSES:
+#### CLASSES:
 
 **class TestScraping(unittest.TestCase)**: Tests the scraping and crawling are working as needed.
 
@@ -77,14 +79,14 @@ presentation.
 
 ## User Guide:
     
-#### lib_blog.py
+### lib_blog.py
 
 Simply run the program by using the wipe or wipe refresh commands listed below.
 
     
-#### user_interface.py
+### user_interface.py
 
-##### tags
+#### tags
     
 Description: A function that compares the number of tags used for x number of articles.
 
@@ -112,7 +114,7 @@ Example inputs:
     "tags alpha asc limit=5"
     "tags limit=15 graph"
 
-##### authors
+#### authors
     
 Description: A function that lists authors names, their urls, and the amount of blogs they have posted.
 
@@ -139,7 +141,7 @@ Example inputs:
     "authors alpha asc limit=10 graph"
     "authors limit=10 graph"
 
-##### comments
+#### comments
     
 Description: A function that returns the amount of comments made per month on all of the blogs published.
 
@@ -158,7 +160,7 @@ Example inputs:
     "comments limit=10"
     "comments graph"
 
-##### images
+#### images
     
 Description: A function that returns the total number of images used for all posts made by a single blog site.
 
@@ -171,7 +173,7 @@ Example Inputs:
     "images graph"
     "images"
 
-##### most_recent
+#### most_recent
     
 Description: A function that returns the most recent blogs to be published on the Library Blog site.
 
@@ -183,7 +185,7 @@ Example inputs:
     "most_recent limit=15"
     "most_recent"
 
-##### wipe
+#### wipe
     
 Description: A function that wipes the database and rescrapes the UMICH Library Blog site
 
@@ -196,7 +198,7 @@ Example Input:
     "wipe"
     "wipe refresh"
 
-##### help
+#### help
     
 Description: A command that will bring up all available commands and their parameters.
 
@@ -204,7 +206,7 @@ Example input:
 
     "help"
 
-##### exit
+#### exit
     
 Description: Exit the program.
 
