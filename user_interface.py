@@ -565,7 +565,6 @@ def user_interface():
 
         elif "wipe" in response_list:
             if "refresh" in response_list:
-                global MAX_STALENESS
                 clean = clean_database()
                 print(clean)
                 data_entry = enter_data_to_db(staleness=0)

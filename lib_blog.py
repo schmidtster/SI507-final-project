@@ -247,9 +247,6 @@ def get_blogs():
     return class_instances
 
 
-# instance_list = get_blogs()
-# print(len(instance_list))
-
 # Build DB Database
 db_name = "blogs.db"
 
