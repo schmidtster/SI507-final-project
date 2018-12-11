@@ -15,7 +15,7 @@ Use the requirements.txt to see all modules necessary to run the program.
 
 In order to setup the database, run user_interface.py. The program will look for a cache file and the database. If
 either are not found, it will create the cache file and database from scratch. If you are not pulling from cache, this
-process will take some time, possibly up to 30 minutes.
+process will take some time, possibly up to 30 minutes. After that, you can run the unit tests in final_proj_test.py.
     
 ## Description:
 
