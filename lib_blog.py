@@ -95,7 +95,7 @@ except Exception as e:
     BLOG_CACHE = {}
     print(e)
 
-MAX_STALENESS = 2000000
+MAX_STALENESS = 100000
 
 
 def is_fresh(cache_entry):
@@ -247,6 +247,9 @@ def get_blogs():
     return class_instances
 
 
+# instance_list = get_blogs()
+# print(len(instance_list))
+
 # Build DB Database
 db_name = "blogs.db"
 
@@ -315,13 +318,9 @@ def clean_database():
     return "Database wiped"
 
 
-def enter_data_to_db(staleness=None):
-    global MAX_STALENESS
+def enter_data_to_db():
     conn = sqlite.connect(db_name)
     cur = conn.cursor()
-    if staleness is not None:
-        MAX_STALENESS = staleness
-        print(MAX_STALENESS)
     blogs = get_blogs()
     for blog in blogs:
         json_data = blog.to_json()
@@ -356,7 +355,6 @@ def enter_data_to_db(staleness=None):
         cur.execute(statement_json, insertion_json)
     conn.commit()
     conn.close()
-    return "Data entered"
 
 
 def update_records():
@@ -437,3 +435,8 @@ def update_records():
         cur.execute(statement)
         conn.commit()
     return "Update successful"
+
+
+# clean_database()
+# enter_data_to_db()
+# update_records()
