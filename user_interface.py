@@ -426,7 +426,10 @@ def load_help_text():
 def user_interface():
     try:
         open("BLOG_CACHE.json", "r").close()
-        sqlite.connect(db_name).close()
+        conn = sqlite.connect(db_name)
+        cur = cur = conn.cursor()
+        sql_text = "SELECT Name FROM Blogsites"
+        result = cur.execute(sql_text)
     except Exception as error8:
         print("No database or cache file found. Creating cache and database...", error8)
         clean = clean_database()
