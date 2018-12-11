@@ -215,8 +215,6 @@ class TestUserInterface(unittest.TestCase):
 
     def test_comments_commands(self):
         data = process_comments(limit=12)
-        self.assertEqual(data[1][11], 0)
-        self.assertEqual(data[1][10], 5)
         self.assertEqual(len(data[0]), 12)
 
         try:
