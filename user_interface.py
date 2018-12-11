@@ -245,15 +245,18 @@ def process_comments(limit=None):
         execute = cur.execute(statement)
         results = execute.fetchall()
         running_total = 0
+        list_index = -1
         for result in results:
             split_result = result[0].split()
             month_year = split_result[0] + " " + split_result[2]
             if month_year not in dates:
                 dates.append(month_year)
                 total_comments_per_month.append(running_total)
+                list_index += 1
                 running_total = int(result[1])
             else:
                 running_total += int(result[1])
+                total_comments_per_month[list_index] = running_total
             if len(dates) > int(limit):
                 del dates[-1]
                 del total_comments_per_month[-1]
@@ -279,15 +282,18 @@ def process_comments(limit=None):
         execute = cur.execute(statement)
         results = execute.fetchall()
         running_total = 0
+        list_index = -1
         for result in results:
             split_result = result[0].split()
             month_year = split_result[0] + " " + split_result[2]
             if month_year not in dates:
                 dates.append(month_year)
                 total_comments_per_month.append(running_total)
+                list_index += 1
                 running_total = int(result[1])
             else:
                 running_total += int(result[1])
+                total_comments_per_month[list_index] = running_total
         dates_index = {}
         count = 1
         print("{:<5} | {:<17.17} | {:<5} \n".format("Index", "Month, Year", "Total Comments"))
@@ -430,6 +436,7 @@ def user_interface():
         cur = cur = conn.cursor()
         sql_text = "SELECT Name FROM Blogsites"
         result = cur.execute(sql_text)
+        conn.close()
     except Exception as error8:
         print("No database or cache file found. Creating cache and database...", error8)
         clean = clean_database()
@@ -652,14 +659,6 @@ def user_interface():
                 update_comp = update_records()
                 print(update_comp)
             continue
-
-        elif "setup" in response_list:
-            clean = clean_database()
-            print(clean)
-            data_entry = enter_data_to_db()
-            print(data_entry)
-            update_comp = update_records()
-            print(update_comp)
 
         elif response == "help":
             print(help_text)

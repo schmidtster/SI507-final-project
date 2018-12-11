@@ -13,7 +13,9 @@ Use the requirements.txt to see all modules necessary to run the program.
 
 #### SETUP
 
-In order to setup the database, run user_interface.py and use the command "setup" to establish the database.
+In order to setup the database, run user_interface.py. The program will look for a cache file and the database. If
+either are not found, it will create the cache file and database from scratch. If you are not pulling from cache, this
+process will take some time, possibly up to 30 minutes.
     
 ## Description:
 
@@ -201,10 +203,6 @@ Example Input:
     
     "wipe"
     "wipe refresh"
-
-#### setup
-
-Description: A function that sets up the database at first running.
 
 #### help
     
